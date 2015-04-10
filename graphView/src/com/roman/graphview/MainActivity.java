@@ -36,41 +36,49 @@ public class MainActivity extends Activity {
 		Date d5 = calendar.getTime();
 		
 		GraphView graph = (GraphView) findViewById(R.id.graph);
+		graph.setTitle("your recent bet's");
+		graph.setTitleTextSize((float)20.0);
+		graph.setTitleColor(Color.BLUE);
 		
+		graph.getLegendRenderer().setVisible(true);
+		graph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
+		graph.getGridLabelRenderer().setVerticalLabelsVisible(true);
+		int curVal = 1385;
 		LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-				new DataPoint (d1, 1), 
-				new DataPoint (d2, 5), 
-				new DataPoint (d3, -3),
-				new DataPoint (d4, 6),
-				new DataPoint (d5, 2)
+				new DataPoint (0, 1305), 
+				new DataPoint (1, 1358), 
+				new DataPoint (2, 1414),
+				new DataPoint (3, 1314),
+				new DataPoint (4, 1394),
+				new DataPoint (5, 1310),
+				new DataPoint (6, 1190),
+				new DataPoint (7, 1090),
+				new DataPoint (8, 970)
 		});
 		
 		series.setDrawDataPoints(true);
 		series.setDataPointsRadius((float)5.0);
 		LineGraphSeries<DataPoint> threschold = new LineGraphSeries<DataPoint>(new DataPoint[] {
-				new DataPoint (d1, 3),
-				new DataPoint (d2, 3),
-				new DataPoint (d3, 3),
-				new DataPoint (d4, 3),
-				new DataPoint (d5, 3)
+				new DataPoint (0, curVal),
+				new DataPoint (1, curVal),
+				new DataPoint (2, curVal),
+				new DataPoint (3, curVal),
+				new DataPoint (4, curVal),
+				new DataPoint (5, curVal),
+				new DataPoint (6, curVal),
+				new DataPoint (7, curVal),
+				new DataPoint (8, curVal),
+				new DataPoint (9, curVal)
 		});
 		threschold.setColor(Color.RED);
 		
 		series.setTitle("current");
 		threschold.setThickness((int)2);
 		threschold.setColor(Color.RED);
-		threschold.setTitle("threschold");
+		threschold.setTitle("original balance");
 		graph.addSeries(series);
 		graph.addSeries(threschold);
-		graph.getLegendRenderer().setVisible(true);
-		
-		graph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-		graph.getGridLabelRenderer().setNumHorizontalLabels(5);
-		graph.getGridLabelRenderer().setVerticalLabelsVisible(true);
-		graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
-		graph.setTitle("your recent bet's");
-		graph.setTitleTextSize((float)20.0);
-		graph.setTitleColor(Color.BLUE);
+//		graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
 	}
 
 	@Override
