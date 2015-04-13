@@ -8,5 +8,6 @@
     <string name="stackeResult">Stacke return value</string>
     <string name="wonRadioButton">Won</string>
     <string name="loseRadioButton">Lose</string>
+    <string name="showLegend">Show Legend</string>
 
 </resources>

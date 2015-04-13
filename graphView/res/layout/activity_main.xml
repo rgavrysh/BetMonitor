@@ -66,4 +66,12 @@
 
     </RadioGroup>
 
+    <CheckBox
+        android:id="@+id/showLegendCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/graph"
+        android:layout_below="@+id/graph"
+        android:text="@string/showLegend" />
+
 </RelativeLayout>
