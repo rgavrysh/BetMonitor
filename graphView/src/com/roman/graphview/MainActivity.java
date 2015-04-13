@@ -16,12 +16,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.text.Editable;
 import android.text.TextUtils;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport.AxisBoundsStatus;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 public class MainActivity extends Activity {
 	
@@ -56,6 +61,8 @@ public class MainActivity extends Activity {
 		series.setDataPointsRadius((float)5.0);
 		series.setTitle("current");
 		
+		series.setOnDataPointTapListener(dataPointTapListener);
+		
 		threschold = new LineGraphSeries<DataPoint>(bets.getThreschold());
 		threschold.setColor(Color.RED);
 		threschold.setThickness((int)2);
@@ -63,6 +70,12 @@ public class MainActivity extends Activity {
 		threschold.setTitle("original balance");
 		graph.addSeries(series);
 		graph.addSeries(threschold);
+		
+		graph.getViewport();
+		graph.getViewport().setXAxisBoundsStatus(AxisBoundsStatus.AUTO_ADJUSTED);
+		graph.getViewport().setYAxisBoundsStatus(AxisBoundsStatus.AUTO_ADJUSTED);
+		graph.getViewport().setScalable(true);
+		graph.getViewport().setScrollable(true);
 		
 		addDataPointButton = (Button) findViewById(R.id.addPointButton);
 		addDataPointButton.setOnClickListener(addDataPointButtonListener);
@@ -110,6 +123,15 @@ public class MainActivity extends Activity {
 				graph.refreshDrawableState();
 			}
 		}
+	};
+	
+	private OnDataPointTapListener dataPointTapListener = new OnDataPointTapListener () {
+		
+		@Override
+		public void onTap(Series series, DataPointInterface dataPoint) {
+			Toast.makeText(MainActivity.this, bets.betSet.get(dataPoint) + " (" + dataPoint.getY() + ")", Toast.LENGTH_LONG).show();
+		}
+		
 	};
 	
 	private boolean isValid (Editable str) {

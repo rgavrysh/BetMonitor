@@ -1,7 +1,9 @@
 package com.roman.graphview;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jjoe64.graphview.series.DataPoint;
 
@@ -11,9 +13,11 @@ public class Bets {
 	private DataPoint[] threschold;
 	private List <DataPoint> dataPointList = new ArrayList<DataPoint>();
 	
+	public Map<DataPoint, String> betSet = new HashMap<DataPoint, String>();
+	
 	public Bets() {
 		initializeDataPoints();
-		
+		initializeBetSet();
 	}
 	
 	private void initializeDataPoints() {
@@ -30,6 +34,11 @@ public class Bets {
 		dataPointList.add(new DataPoint(10, 792));
 	}
 	
+	private void initializeBetSet(){
+		for (DataPoint dp : dataPointList){
+			betSet.put(dp, "Home vs Guest");
+		}
+	}
 	public DataPoint[] getDataPoints() {
 		datapoints = new DataPoint[dataPointList.size()];
 		for (int i = 0; i < dataPointList.size(); i++){
@@ -51,6 +60,10 @@ public class Bets {
 			threschold[i] = new DataPoint(i, balance);
 		}
 		return threschold;
+	}
+	
+	public void setBetSummary () {
+		
 	}
 
 }
