@@ -20,8 +20,50 @@
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="200dip"
-        android:layout_below="@+id/graphNameTextView"
+        android:layout_below="@+id/addPointButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp" />
+
+    <Button
+        android:id="@+id/addPointButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/graphNameTextView"
+        android:text="@string/add_point" />
+
+    <EditText
+        android:id="@+id/stackeResultEditText"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/graph"
+        android:layout_toRightOf="@+id/addPointButton"
+        android:ems="5"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/graph"
+        android:layout_alignTop="@+id/stackeResultEditText"
+        android:layout_toRightOf="@+id/graphNameTextView" >
+
+        <RadioButton
+            android:id="@+id/wonRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/wonRadioButton" />
+
+        <RadioButton
+            android:id="@+id/loseRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loseRadioButton" />
+
+    </RadioGroup>
 
 </RelativeLayout>

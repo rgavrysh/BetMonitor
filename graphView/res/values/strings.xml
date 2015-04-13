@@ -4,5 +4,9 @@
     <string name="app_name">graphView</string>
     <string name="action_settings">Settings</string>
     <string name="graph_name">First linear graph</string>
+    <string name="add_point">Add Point:</string>
+    <string name="stackeResult">Stacke return value</string>
+    <string name="wonRadioButton">Won</string>
+    <string name="loseRadioButton">Lose</string>
 
 </resources>

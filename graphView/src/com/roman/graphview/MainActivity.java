@@ -1,39 +1,29 @@
 package com.roman.graphview;
 
-import java.util.Calendar;
-import java.util.Date;
+//import java.util.Calendar;
+//import java.util.Date;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
-import android.R.color;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class MainActivity extends Activity {
+	
+	Button addDataPointButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		Calendar calendar = Calendar.getInstance();
-		
-		Date d1 = calendar.getTime();
-		calendar.add(Calendar.DATE, 1);
-		Date d2 = calendar.getTime();
-		calendar.add(Calendar.DATE, 1);
-		Date d3 = calendar.getTime();
-		calendar.add(Calendar.DATE, 1);
-		Date d4 = calendar.getTime();
-		calendar.add(Calendar.DATE, 1);
-		Date d5 = calendar.getTime();
 		
 		GraphView graph = (GraphView) findViewById(R.id.graph);
 		graph.setTitle("your recent bet's");
@@ -44,17 +34,9 @@ public class MainActivity extends Activity {
 		graph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
 		graph.getGridLabelRenderer().setVerticalLabelsVisible(true);
 		int curVal = 1385;
-		LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-				new DataPoint (0, 1305), 
-				new DataPoint (1, 1358), 
-				new DataPoint (2, 1414),
-				new DataPoint (3, 1314),
-				new DataPoint (4, 1394),
-				new DataPoint (5, 1310),
-				new DataPoint (6, 1190),
-				new DataPoint (7, 1090),
-				new DataPoint (8, 970)
-		});
+		Bets bets = new Bets();
+		
+		LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(bets.getDataPoints());
 		
 		series.setDrawDataPoints(true);
 		series.setDataPointsRadius((float)5.0);
@@ -68,7 +50,9 @@ public class MainActivity extends Activity {
 				new DataPoint (6, curVal),
 				new DataPoint (7, curVal),
 				new DataPoint (8, curVal),
-				new DataPoint (9, curVal)
+				new DataPoint (9, curVal),
+				new DataPoint (10, curVal),
+				new DataPoint (11, curVal)
 		});
 		threschold.setColor(Color.RED);
 		
@@ -79,7 +63,20 @@ public class MainActivity extends Activity {
 		graph.addSeries(series);
 		graph.addSeries(threschold);
 //		graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
+		
+//		addDataPointButton.findViewById(R.id.addPointButton);
+//		addDataPointButton.setOnClickListener(addDataPointButtonListener);
 	}
+	
+//	private OnClickListener addDataPointButtonListener = new OnClickListener() {
+//
+//		@Override
+//		public void onClick(View v) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
