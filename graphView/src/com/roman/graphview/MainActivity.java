@@ -1,177 +1,109 @@
 package com.roman.graphview;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.graphics.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
-import android.text.Editable;
-import android.text.TextUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.Viewport.AxisBoundsStatus;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.Series;
+public class MainActivity extends ListActivity {
 
-public class MainActivity extends Activity {
-	
-	Bets bets = new Bets();
-	LineGraphSeries<DataPoint> series;
-	LineGraphSeries<DataPoint> threschold;
-	GraphView graph;
-	
-	Button addDataPointButton;
-	EditText stakeResult;
-	RadioGroup radioGroup;
-	RadioButton wonRadioButton;
-	RadioButton loseRadioButton;
-	CheckBox showLegend;
+	// The Intent is used to issue that an operation should
+	// be performed
 
-	@Override
+	Intent intent;
+	TextView contactId;
+
+	// The object that allows me to manipulate the database
+
+	DBTools dbTools = new DBTools(this);
+
+	// Called when the Activity is first called
+
 	protected void onCreate(Bundle savedInstanceState) {
+		// Get saved data if there is any
+
 		super.onCreate(savedInstanceState);
+
+		// Designate that activity_main.xml is the interface used
+		
 		setContentView(R.layout.activity_main);
-		
-		graph = (GraphView) findViewById(R.id.graph);
-		graph.setTitle("your recent bet's");
-		graph.setTitleTextSize((float)20.0);
-		graph.setTitleColor(Color.BLUE);
-		
-		graph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-		graph.getGridLabelRenderer().setVerticalLabelsVisible(true);
-		
-		series = new LineGraphSeries<DataPoint>(bets.getDataPoints());
-		
-		series.setDrawDataPoints(true);
-		series.setDataPointsRadius((float)5.0);
-		series.setTitle("current");
-		
-		series.setOnDataPointTapListener(dataPointTapListener);
-		
-		threschold = new LineGraphSeries<DataPoint>(bets.getThreschold());
-		threschold.setColor(Color.RED);
-		threschold.setThickness((int)2);
-		threschold.setColor(Color.RED);
-		threschold.setTitle("original balance");
-		graph.addSeries(series);
-		graph.addSeries(threschold);
-		
-		graph.getViewport();
-		graph.getViewport().setXAxisBoundsStatus(AxisBoundsStatus.AUTO_ADJUSTED);
-		graph.getViewport().setYAxisBoundsStatus(AxisBoundsStatus.AUTO_ADJUSTED);
-		graph.getViewport().setScalable(true);
-		graph.getViewport().setScrollable(true);
-		
-		addDataPointButton = (Button) findViewById(R.id.addPointButton);
-		addDataPointButton.setOnClickListener(addDataPointButtonListener);
-		
-		stakeResult = (EditText) findViewById(R.id.stackeResultEditText);
-		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
-		loseRadioButton = (RadioButton) findViewById(R.id.loseRadioButton);
-		wonRadioButton = (RadioButton) findViewById(R.id.wonRadioButton);
-		
-		showLegend = (CheckBox) findViewById(R.id.showLegendCheckBox);
-		showLegend.setOnCheckedChangeListener(showLegendCheckListener);
-	}
-	
-	private OnClickListener addDataPointButtonListener = new OnClickListener() {
 
-		@Override
-		public void onClick(View v) {
-			if (isValid(stakeResult.getText())){
-				
-				int stake = Integer.parseInt(stakeResult.getText().toString());
-				if (loseRadioButton.isChecked()) {
-					stake = stake*(-1);
-				}
-				bets.addPoint(stake);
-				series.resetData(bets.getDataPoints());
-				threschold.resetData(bets.getThreschold());
-				stakeResult.setText("");
-			}
-			else {
-				showStakeEditTextAlert();
-			}
-		}
-		
-	};
-	
-	private OnCheckedChangeListener showLegendCheckListener = new OnCheckedChangeListener() {
-		
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			if (showLegend.isChecked()){
-				graph.getLegendRenderer().setVisible(true);
-			}
-			else {
-				graph.getLegendRenderer().setVisible(false);
-				graph.refreshDrawableState();
-			}
-		}
-	};
-	
-	private OnDataPointTapListener dataPointTapListener = new OnDataPointTapListener () {
-		
-		@Override
-		public void onTap(Series series, DataPointInterface dataPoint) {
-			Toast.makeText(MainActivity.this, bets.betSet.get(dataPoint) + " (" + dataPoint.getY() + ")", Toast.LENGTH_LONG).show();
-		}
-		
-	};
-	
-	private boolean isValid (Editable str) {
-		return (TextUtils.isDigitsOnly(str.toString()) && !TextUtils.isEmpty(str.toString()));
-	}
-	
-	public void showStakeEditTextAlert () {
-		try {
-			AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+		// Gets all the data from the database and stores it
+		// in an ArrayList
+
+		ArrayList<HashMap<String, String>> contactList =  dbTools.getAllBets();
+
+		// Check to make sure there are contacts to display
+
+		if(contactList.size()!=0) {
 			
-			alertDialog.setTitle("Wrong stake format.");
-			alertDialog.setMessage("Input for stake is incorrect. \nPlease, use only numeric symbols.");
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+			// Get the ListView and assign an event handler to it
+			
+			ListView listView = getListView();
+			listView.setOnItemClickListener(new OnItemClickListener() {
 				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					finish();
+				public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+					
+					// When an item is clicked get the TextView
+					// with a matching checkId
+					
+					contactId = (TextView) view.findViewById(R.id.betsId);
+					
+					// Convert that contactId into a String
+					
+					String contactIdValue = contactId.getText().toString();	
+					
+					// Signals an intention to do something
+					// getApplication() returns the application that owns
+					// this activity
+					
+					Intent  theIndent = new Intent(getApplication(),EditBet.class);
+					
+					// Put additional data in for EditContact to use
+					
+					theIndent.putExtra("contactId", contactIdValue); 
+					
+					// Calls for EditContact
+					
+					startActivity(theIndent); 
 				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
+			}); 
+			
+			// A list adapter is used bridge between a ListView and
+			// the ListViews data
+			
+			// The SimpleAdapter connects the data in an ArrayList
+			// to the XML file
+			
+			// First we pass in a Context to provide information needed
+			// about the application
+			// The ArrayList of data is next followed by the xml resource
+			// Then we have the names of the data in String format and
+			// their specific resource ids
+			
+			ListAdapter adapter = new SimpleAdapter( MainActivity.this, contactList, R.layout.bets_entry, new String[] { "betsId","homeSide", "awaySide"}, new int[] {R.id.betsId, R.id.homeSide, R.id.awaySide});
+			
+			// setListAdapter provides the Cursor for the ListView
+			// The Cursor provides access to the database data
+			
+			setListAdapter(adapter);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	
+	// When showAddContact is called with a click the Activity 
+	// NewContact is called
+	
+	public void showAddContact(View view) {
+		Intent theIntent = new Intent(getApplication(), NewBet.class);
+		startActivity(theIntent);
 	}
 }
