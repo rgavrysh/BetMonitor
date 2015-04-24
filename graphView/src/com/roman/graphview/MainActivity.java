@@ -20,7 +20,7 @@ public class MainActivity extends ListActivity {
 	// be performed
 
 	Intent intent;
-	TextView contactId;
+	TextView betID;
 
 	// The object that allows me to manipulate the database
 
@@ -40,37 +40,37 @@ public class MainActivity extends ListActivity {
 		// Gets all the data from the database and stores it
 		// in an ArrayList
 
-		ArrayList<HashMap<String, String>> contactList =  dbTools.getAllBets();
+		ArrayList<HashMap<String, String>> betsList =  dbTools.getAllBets();
 
 		// Check to make sure there are contacts to display
 
-		if(contactList.size()!=0) {
+		if(betsList.size()!=0) {
 			
 			// Get the ListView and assign an event handler to it
 			
 			ListView listView = getListView();
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				
-				public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					
 					// When an item is clicked get the TextView
 					// with a matching checkId
 					
-					contactId = (TextView) view.findViewById(R.id.betsId);
+					betID = (TextView) view.findViewById(R.id.betsIdEntryTextView);
 					
 					// Convert that contactId into a String
 					
-					String contactIdValue = contactId.getText().toString();	
+					String betIdValue = betID.getText().toString();	
 					
 					// Signals an intention to do something
 					// getApplication() returns the application that owns
 					// this activity
 					
-					Intent  theIndent = new Intent(getApplication(),EditBet.class);
+					Intent  theIndent = new Intent(getApplication(), EditBet.class);
 					
 					// Put additional data in for EditContact to use
 					
-					theIndent.putExtra("contactId", contactIdValue); 
+					theIndent.putExtra("betId", betIdValue);
 					
 					// Calls for EditContact
 					
@@ -90,7 +90,7 @@ public class MainActivity extends ListActivity {
 			// Then we have the names of the data in String format and
 			// their specific resource ids
 			
-			ListAdapter adapter = new SimpleAdapter( MainActivity.this, contactList, R.layout.bets_entry, new String[] { "betsId","homeSide", "awaySide"}, new int[] {R.id.betsId, R.id.homeSide, R.id.awaySide});
+			ListAdapter adapter = new SimpleAdapter( MainActivity.this, betsList, R.layout.bets_entry, new String[] { "betsID","homeSide", "awaySide"}, new int[] {R.id.betsIdEntryTextView, R.id.homeSideEntryTextView, R.id.awaySideEntryTextView});
 			
 			// setListAdapter provides the Cursor for the ListView
 			// The Cursor provides access to the database data
